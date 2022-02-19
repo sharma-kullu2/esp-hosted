@@ -31,7 +31,7 @@
 #ifdef CONFIG_SUPPORT_ESP_SERIAL
 #include "esp_serial.h"
 #endif
-#include "esp_bt_api.h"
+//#include "esp_bt_api.h"
 #include "esp_api.h"
 
 MODULE_LICENSE("GPL");
@@ -104,7 +104,7 @@ static const struct net_device_ops esp_netdev_ops = {
 	.ndo_stop = esp_stop,
 	.ndo_start_xmit = esp_hard_start_xmit,
 	.ndo_set_mac_address = esp_set_mac_address,
-	.ndo_validate_addr = eth_validate_addr,
+	/*.ndo_validate_addr = eth_validate_addr,*/
 	.ndo_tx_timeout = esp_tx_timeout,
 	.ndo_get_stats = esp_get_stats,
 	.ndo_set_rx_mode = esp_set_rx_mode,
@@ -325,11 +325,11 @@ void process_capabilities(u8 cap)
 	adapter->capabilities = cap;
 
 	/* Reset BT */
-	esp_deinit_bt(esp_get_adapter());
+	//esp_deinit_bt(esp_get_adapter());
 
 	if ((cap & ESP_BT_SPI_SUPPORT) || (cap & ESP_BT_SDIO_SUPPORT)) {
 		msleep(200);
-		esp_init_bt(esp_get_adapter());
+		//esp_init_bt(esp_get_adapter());
 	}
 }
 
@@ -378,8 +378,8 @@ static void process_rx_packet(struct sk_buff *skb)
 	struct esp_payload_header *payload_header = NULL;
 	u16 len = 0, offset = 0;
 	u16 rx_checksum = 0, checksum = 0;
-	struct hci_dev *hdev = adapter.hcidev;
-	u8 *type = NULL;
+	//struct hci_dev *hdev = adapter.hcidev;
+	//u8 *type = NULL;
 	int ret = 0, ret_len = 0;
 
 	if (!skb)
@@ -440,9 +440,9 @@ static void process_rx_packet(struct sk_buff *skb)
 
 		priv->stats.rx_bytes += skb->len;
 		priv->stats.rx_packets++;
-	} else if (payload_header->if_type == ESP_HCI_IF) {
+	} /*else if (payload_header->if_type == ESP_HCI_IF) {
 		if (hdev) {
-			/* chop off the header from skb */
+			//chop off the header from skb 
 			skb_pull(skb, offset);
 
 			type = skb->data;
@@ -460,7 +460,7 @@ static void process_rx_packet(struct sk_buff *skb)
 				esp_hci_update_rx_counter(hdev, *type, skb->len);
 			}
 		}
-	} else if (payload_header->if_type == ESP_PRIV_IF) {
+	} */else if (payload_header->if_type == ESP_PRIV_IF) {
 		process_priv_communication(skb);
 	}
 }

@@ -27,6 +27,16 @@
 #include <net/bluetooth/hci_core.h>
 #include "adapter.h"
 
+
+/*Since our kernel is different than actual*/
+#ifndef KERNEL_VERSION
+#define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + ((c) > 255 ? 255 : (c)))
+#endif
+
+#ifndef LINUX_VERSION_CODE
+#define LINUX_VERSION_CODE KERNEL_VERSION(5,7,21)
+#endif
+
 #define ESP_IF_TYPE_SDIO        1
 #define ESP_IF_TYPE_SPI         2
 
